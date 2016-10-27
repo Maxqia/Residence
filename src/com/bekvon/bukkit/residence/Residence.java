@@ -463,6 +463,7 @@ public class Residence extends JavaPlugin {
 	    String packageName = getServer().getClass().getPackage().getName();
 	    String[] packageSplit = packageName.split("\\.");
 	    String version = packageSplit[packageSplit.length - 1].substring(0, packageSplit[packageSplit.length - 1].length() - 3);
+	    if (version.equals("i")) version = "v1_10";
 	    try {
 		Class<?> nmsClass;
 		if (getConfigManager().CouldronCompatability())

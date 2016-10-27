@@ -1398,19 +1398,19 @@ public enum ParticleEffects {
 		return;
 	    }
 	    try {
-		version = Integer.parseInt(ReflectionUtils.PackageType.getServerVersion().split("_")[1]);
+		version = 10;
 	    } catch (Exception exception) {
 		throw new VersionIncompatibleException("Your current bukkit version seems to be incompatible with this library", exception);
 	    }
 	    try {
 		if (version > 7) {
-		    enumParticle = PackageType.MINECRAFT_SERVER.getClass("EnumParticle");
+		    enumParticle = PackageType.MINECRAFT_SERVER.getClass("util.EnumParticleTypes");
 		}
-		Class<?> packetClass = PackageType.MINECRAFT_SERVER.getClass(version < 7 ? "Packet63WorldParticles" : "PacketPlayOutWorldParticles");
+		Class<?> packetClass = PackageType.MINECRAFT_SERVER.getClass(version < 7 ? "Packet63WorldParticles" : "network.play.server.SPacketParticles");
 		packetConstructor = ReflectionUtils.getConstructor(packetClass);
-		getHandle = ReflectionUtils.getMethod("CraftPlayer", PackageType.CRAFTBUKKIT_ENTITY, "getHandle");
-		playerConnection = ReflectionUtils.getField("EntityPlayer", PackageType.MINECRAFT_SERVER, false, "playerConnection");
-		sendPacket = ReflectionUtils.getMethod(playerConnection.getType(), "sendPacket", PackageType.MINECRAFT_SERVER.getClass("Packet"));
+		getHandle = ReflectionUtils.getMethod("PorePlayer", PackageType.CRAFTBUKKIT_ENTITY, "getHandle");
+		playerConnection = ReflectionUtils.getField("entity.player.EntityPlayerMP", PackageType.MINECRAFT_SERVER, false, "field_71135_a");
+		sendPacket = ReflectionUtils.getMethod(playerConnection.getType(), "func_147359_a", PackageType.MINECRAFT_SERVER.getClass("network.Packet"));
 	    } catch (Exception exception) {
 		throw new VersionIncompatibleException("Your current bukkit version seems to be incompatible with this library", exception);
 	    }
@@ -1455,20 +1455,20 @@ public enum ParticleEffects {
 		    }
 		    ReflectionUtils.setValue(packet, true, "a", name);
 		} else {
-		    ReflectionUtils.setValue(packet, true, "a", enumParticle.getEnumConstants()[effect.getId()]);
-		    ReflectionUtils.setValue(packet, true, "j", longDistance);
+		    ReflectionUtils.setValue(packet, true, "field_179751_a", enumParticle.getEnumConstants()[effect.getId()]);
+		    ReflectionUtils.setValue(packet, true, "field_179752_j", longDistance);
 		    if (data != null) {
-			ReflectionUtils.setValue(packet, true, "k", data.getPacketData());
+			ReflectionUtils.setValue(packet, true, "field_179753_k", data.getPacketData());
 		    }
 		}
-		ReflectionUtils.setValue(packet, true, "b", (float) center.getX());
-		ReflectionUtils.setValue(packet, true, "c", (float) center.getY());
-		ReflectionUtils.setValue(packet, true, "d", (float) center.getZ());
-		ReflectionUtils.setValue(packet, true, "e", offsetX);
-		ReflectionUtils.setValue(packet, true, "f", offsetY);
-		ReflectionUtils.setValue(packet, true, "g", offsetZ);
-		ReflectionUtils.setValue(packet, true, "h", speed);
-		ReflectionUtils.setValue(packet, true, "i", amount);
+		ReflectionUtils.setValue(packet, true, "field_149234_b", (float) center.getX());
+		ReflectionUtils.setValue(packet, true, "field_149235_c", (float) center.getY());
+		ReflectionUtils.setValue(packet, true, "field_149232_d", (float) center.getZ());
+		ReflectionUtils.setValue(packet, true, "field_149233_e", offsetX);
+		ReflectionUtils.setValue(packet, true, "field_149230_f", offsetY);
+		ReflectionUtils.setValue(packet, true, "field_149231_g", offsetZ);
+		ReflectionUtils.setValue(packet, true, "field_149237_h", speed);
+		ReflectionUtils.setValue(packet, true, "field_149238_i", amount);
 	    } catch (Exception exception) {
 		throw new PacketInstantiationException("Packet instantiation failed", exception);
 	    }

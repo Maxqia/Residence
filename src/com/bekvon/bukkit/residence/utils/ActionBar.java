@@ -116,50 +116,50 @@ public class ActionBar implements ABInterface {
     }
 
     private String getCraftPlayerClasspath() {
-	return "org.bukkit.craftbukkit." + version + ".entity.CraftPlayer";
+	return version.contains("impl") ? "blue.lapis.pore.impl.entity.PorePlayer" :"org.bukkit.craftbukkit." + version + ".entity.CraftPlayer";
     }
 
     private String getClassMessageClasspath() {
-	return "org.bukkit.craftbukkit." + version + ".util.CraftChatMessage";
+	return version.contains("impl") ? "blue.lapis.pore.util.PoreText" : "org.bukkit.craftbukkit." + version + ".util.CraftChatMessage";
     }
 
     private String getPlayerConnectionClasspath() {
-	return "net.minecraft.server." + version + ".PlayerConnection";
+	return version.contains("impl") ? "net.minecraft.network.NetHandlerPlayServer" : "net.minecraft.server." + version + ".PlayerConnection";
     }
 
     private String getNMSPlayerClasspath() {
-	return "net.minecraft.server." + version + ".EntityPlayer";
+	return version.contains("impl") ? "net.minecraft.entity.player.EntityPlayerMP" : "net.minecraft.server." + version + ".EntityPlayer";
     }
 
     private String getPacketClasspath() {
-	return "net.minecraft.server." + version + ".Packet";
+	return version.contains("impl") ? "net.minecraft.network.Packet" : "net.minecraft.server." + version + ".Packet";
     }
 
     private String getIChatBaseComponentClasspath() {
-	return "net.minecraft.server." + version + ".IChatBaseComponent";
+	return version.contains("impl") ? "net.minecraft.util.text.ITextComponent" : "net.minecraft.server." + version + ".IChatBaseComponent";
     }
 
     private String getChatSerializerClasspath() {
 	if (version.equals("v1_8_R1") || version.contains("1_7")) {
 	    return "net.minecraft.server." + version + ".ChatSerializer";
 	}
-	return "net.minecraft.server." + version + ".IChatBaseComponent$ChatSerializer";// 1_8_R2 moved to IChatBaseComponent
+	return version.contains("impl") ? "net.minecraft.util.text.ITextComponent$Serializer" : "net.minecraft.server." + version + ".IChatBaseComponent$ChatSerializer";// 1_8_R2 moved to IChatBaseComponent
     }
 
     private String getPacketPlayOutChatClasspath() {
-	return "net.minecraft.server." + version + ".PacketPlayOutChat";
+	return version.contains("impl") ? "net.minecraft.network.play.server.SPacketChat" : "net.minecraft.server." + version + ".PacketPlayOutChat";
     }
 
     private String getPacketPlayOutTitleClasspath() {
-	return "net.minecraft.server." + version + ".PacketPlayOutTitle";
+	return version.contains("impl") ? "net.minecraft.network.play.server.SPacketTitle" : "net.minecraft.server." + version + ".PacketPlayOutTitle";
     }
 
     private String getEnumTitleActionClasspath() {
-	return getPacketPlayOutTitleClasspath() + "$EnumTitleAction";
+	return getPacketPlayOutTitleClasspath() + (version.contains("impl") ? "$Type" : "$EnumTitleAction");
     }
 
     private String getChatSerializerMethod() {
-	return "a";
+	return version.contains("impl") ? "func_150699_a" : "a";
     }
 
     private String getHandleMethod() {
@@ -167,14 +167,14 @@ public class ActionBar implements ABInterface {
     }
 
     private String getPlayerConnection() {
-	return "playerConnection";
+	return version.contains("impl") ? "field_71135_a" : "playerConnection";
     }
 
     private String getSendPacket() {
-	return "sendPacket";
+	return version.contains("impl") ? "func_147359_a" : "sendPacket";
     }
 
     private String getFromString() {
-	return "fromString";
+	return version.contains("impl") ? "convert" : "fromString";
     }
 }
