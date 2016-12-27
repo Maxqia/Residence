@@ -24,7 +24,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
@@ -50,6 +49,14 @@ import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.Transaction;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.chat.ChatChannel;
 import com.bekvon.bukkit.residence.containers.Flags;
@@ -68,7 +75,9 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagState;
 import com.bekvon.bukkit.residence.signsStuff.Signs;
 import com.bekvon.bukkit.residence.utils.GetTime;
 
-public class ResidencePlayerListener implements Listener {
+import blue.lapis.pore.Pore;
+
+public class ResidencePlayerListener implements org.bukkit.event.Listener {
 
     protected Map<String, String> currentRes;
     protected Map<String, Long> lastUpdate;
@@ -92,6 +101,7 @@ public class ResidencePlayerListener implements Listener {
 	    lastUpdate.put(player.getName(), System.currentTimeMillis());
 	}
 	this.plugin = plugin;
+	Sponge.getEventManager().registerListeners(Pore.getPlugin(), this);
     }
 
     public Map<String, SetFlag> getGUImap() {
@@ -508,6 +518,7 @@ public class ResidencePlayerListener implements Listener {
 	setFlag.toggleFlag(slot, click, action);
 	setFlag.recalculateInv();
 	player.getOpenInventory().getTopInventory().setContents(setFlag.getInventory().getContents());
+	player.updateInventory();
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -1435,7 +1446,7 @@ public class ResidencePlayerListener implements Listener {
 	    event.setDroppedExp(0);
 	}
 
-	if (res.getPermissions().has(Flags.respawn, false) && Bukkit.getVersion().toString().contains("Spigot"))
+	/*if (res.getPermissions().has(Flags.respawn, false) && Bukkit.getVersion().toString().contains("Spigot"))
 	    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 		@Override
 		public void run() {
@@ -1445,7 +1456,7 @@ public class ResidencePlayerListener implements Listener {
 		    }
 		    return;
 		}
-	    }, 1L);
+	    }, 1L);*/
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

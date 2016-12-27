@@ -5,6 +5,11 @@ import java.util.List;
 
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.bekvon.bukkit.residence.protection.FlagPermissions.FlagCombo;
+
+import blue.lapis.pore.Pore;
+import blue.lapis.pore.converter.vector.LocationConverter;
+import blue.lapis.pore.impl.entity.PorePlayer;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -35,7 +40,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
@@ -43,8 +47,18 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.Transaction;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.cause.Named;
+import org.spongepowered.api.world.World;
 
-public class ResidenceBlockListener implements Listener {
+public class ResidenceBlockListener implements org.bukkit.event.Listener {
 
     private List<String> MessageInformed = new ArrayList<String>();
     private List<String> ResCreated = new ArrayList<String>();
@@ -53,6 +67,7 @@ public class ResidenceBlockListener implements Listener {
 
     public ResidenceBlockListener(Residence residence) {
 	this.plugin = residence;
+	Sponge.getEventManager().registerListeners(Pore.getPlugin(), this);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -638,6 +653,33 @@ public class ResidenceBlockListener implements Listener {
 	    FlagPermissions perms = plugin.getPermsByLoc(event.getBlock().getLocation());
 	    if (!perms.has(Flags.ignite, true)) {
 		event.setCancelled(true);
+	    }
+	}
+    }
+
+    @Listener
+    public void onSpreadEvent(ChangeBlockEvent.Pre event, @Named(NamedCause.FIRE_SPREAD) World world) {
+	System.out.println(event.getCause());
+	for (org.spongepowered.api.world.Location<World> location : event.getLocations()) {
+	    FlagPermissions perms = plugin.getPermsByLoc(LocationConverter.of(location));
+	    if (!perms.has(Flags.firespread, true))
+		event.setCancelled(true);
+	}
+    }
+
+    @Listener
+    public void onPlaceFireEvent(ChangeBlockEvent.Place event, @Named(NamedCause.NOTIFIER) org.spongepowered.api.entity.living.player.Player playerSponge) {
+	for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
+	    if (!transaction.getFinal().getExtendedState().getType().equals(BlockTypes.FIRE)) continue;
+	    System.out.println(event.getCause());
+	    Player player = PorePlayer.of(playerSponge);
+	    FlagPermissions perms = plugin.getPermsByLocForPlayer(
+		    LocationConverter.of(transaction.getOriginal().getLocation().get()),
+		    player);
+	    if (player != null && !perms.playerHas(player.getName(), player.getWorld().getName(), Flags.ignite, true) && !plugin.isResAdminOn(player)) {
+		//event.setCancelled(true);
+		transaction.setValid(false);
+		plugin.msg(player, lm.Flag_Deny, Flags.ignite.getName());
 	    }
 	}
     }

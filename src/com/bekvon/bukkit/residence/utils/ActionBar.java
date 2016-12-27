@@ -35,6 +35,7 @@ public class ActionBar implements ABInterface {
 	try {
 	    String[] v = Bukkit.getServer().getClass().getPackage().getName().split("\\.");
 	    version = v[v.length - 1];
+	    if (Bukkit.getName().contains("Pore")) version = "impl";
 //	    version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 	    Class<?> typePacketPlayOutChat = Class.forName(getPacketPlayOutChatClasspath());
 	    Class<?> nmsIChatBaseComponent = Class.forName(getIChatBaseComponentClasspath());
@@ -54,6 +55,7 @@ public class ActionBar implements ABInterface {
 		nmsPacketPlayOutChat = typePacketPlayOutChat.getConstructor(nmsIChatBaseComponent, int.class);
 	    }
 	} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | NoSuchFieldException ex) {
+	    ex.printStackTrace();
 	    simpleMessages = true;
 	    Bukkit.getLogger().log(Level.SEVERE, "Your server can't fully support action bar messages. They will be shown in chat instead.");
 	}

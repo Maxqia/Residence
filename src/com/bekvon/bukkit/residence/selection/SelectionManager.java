@@ -436,67 +436,37 @@ public class SelectionManager {
 		try {
 		    boolean spigot = plugin.isSpigot();
 
-		    if (spigot) {
-			if (!error)
-			    for (int i = 0; i < locList.size(); i += timesMore) {
-				Location l = locList.get(i);
-				player.spigot().playEffect(l, plugin.getConfigManager().getSelectedSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
-				if (!same)
-				    trimed.add(l);
-			    }
-			else
-			    for (int i = 0; i < locList.size(); i += timesMore) {
-				Location l = locList.get(i);
-				player.spigot().playEffect(l, plugin.getConfigManager().getOverlapSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
-				if (!same)
-				    trimed.add(l);
-			    }
+		    if (!error)
+			for (int i = 0; i < locList.size(); i += timesMore) {
+			    Location l = locList.get(i);
+			    player.spigot().playEffect(l, plugin.getConfigManager().getSelectedSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+			    if (!same)
+				trimed.add(l);
+			}
+		    else
+			for (int i = 0; i < locList.size(); i += timesMore) {
+			    Location l = locList.get(i);
+			    player.spigot().playEffect(l, plugin.getConfigManager().getOverlapSpigotSides(), 0, 0, 0, 0, 0, 0, 1, 128);
+			    if (!same)
+				trimed.add(l);
+			}
 
-			if (!error)
-			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
-				Location l = locList2.get(i);
-				player.spigot().playEffect(l, plugin.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
-				if (!same)
-				    trimed2.add(l);
-			    }
-			else
-			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
-				Location l = locList2.get(i);
-				player.spigot().playEffect(l, plugin.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
-				if (!same)
-				    trimed2.add(l);
-			    }
-		    } else {
-			if (!error)
-			    for (int i = 0; i < locList.size(); i += timesMore) {
-				Location l = locList.get(i);
-				plugin.getConfigManager().getSelectedSides().display(0, 0, 0, 0, 1, l, player);
-				if (!same)
-				    trimed.add(l);
-			    }
-			else
-			    for (int i = 0; i < locList.size(); i += timesMore) {
-				Location l = locList.get(i);
-				plugin.getConfigManager().getOverlapSides().display(0, 0, 0, 0, 1, l, player);
-				if (!same)
-				    trimed.add(l);
-			    }
-			if (!error)
-			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
-				Location l = locList2.get(i);
-				plugin.getConfigManager().getSelectedFrame().display(0, 0, 0, 0, 1, l, player);
-				if (!same)
-				    trimed2.add(l);
-			    }
-			else
-			    for (int i = 0; i < locList2.size(); i += errorTimesMore) {
-				Location l = locList2.get(i);
-				plugin.getConfigManager().getOverlapFrame().display(0, 0, 0, 0, 1, l, player);
-				if (!same)
-				    trimed2.add(l);
-			    }
-		    }
+		    if (!error)
+			for (int i = 0; i < locList2.size(); i += errorTimesMore) {
+			    Location l = locList2.get(i);
+			    player.spigot().playEffect(l, plugin.getConfigManager().getSelectedSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+			    if (!same)
+				trimed2.add(l);
+			}
+		    else
+			for (int i = 0; i < locList2.size(); i += errorTimesMore) {
+			    Location l = locList2.get(i);
+			    player.spigot().playEffect(l, plugin.getConfigManager().getOverlapSpigotFrame(), 0, 0, 0, 0, 0, 0, 1, 128);
+			    if (!same)
+				trimed2.add(l);
+			}
 		} catch (Exception e) {
+		    e.printStackTrace();
 		    return;
 		}
 
